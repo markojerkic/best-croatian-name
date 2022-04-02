@@ -1,0 +1,23 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model names {
+  id     Int          @id @default(autoincrement())
+  name   String       @db.VarChar(255)
+  gender names_gender
+  rating Float?       @default(0) @db.Float
+
+  @@unique([name, gender], map: "name")
+}
+
+enum names_gender {
+  male
+  female
+}

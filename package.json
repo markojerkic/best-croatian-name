@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^3.11.1",
     "next": "12.1.4",
+    "prisma": "^3.11.1",
     "react": "18.0.0",
     "react-dom": "18.0.0"
   },
