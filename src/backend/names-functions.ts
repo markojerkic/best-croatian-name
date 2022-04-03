@@ -26,3 +26,7 @@ export const getNamesFromIds = async (ids: number[]) => {
 export const updateRating = async (name: names) => {
   await prisma.names.update({where: {id: name.id}, data: {rating: name.rating}});
 }
+
+export const getSortedNames = async (gender: 'male' | 'female') => {
+  return await prisma.names.findMany({where: {gender: gender}, orderBy: {rating: 'desc'}});
+}
