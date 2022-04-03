@@ -1,14 +1,15 @@
 import { names } from '@prisma/client';
 import { prisma } from './prisma';
 
+const FIST_MALE_id = 100;
+const LAST_MALE_ID = 199;
+
 export const getRandomNames = async () => {
   const maleOrFemale = Math.floor(Math.random() * 2) == 0? 'male': 'female';
-  const minMax = await prisma.names.aggregate({
-    _min: {id: true},
-    _max: {id: true},
-    where: { gender: maleOrFemale }
-  });
-  const generate = () => Math.floor(Math.random() * ((minMax._max.id || 1)-(minMax._min.id || 1))) + (minMax._min.id || 1)-1;
+  const minMax = (maleOrFemale === 'male')? {min: FIST_MALE_id, max: +LAST_MALE_ID}:
+  {min: 1, max: FIST_MALE_id -1}
+  console.log(minMax);
+  const generate = () => Math.floor(Math.random() * (minMax.max-minMax.min)) + minMax.min-1;
   const ids = [generate(), generate(), generate()]
   const names = await getNamesFromIds(ids);
   return {

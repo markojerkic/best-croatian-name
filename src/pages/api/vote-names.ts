@@ -17,7 +17,7 @@ export default async function handler(
   if (votedNames.map((name) => name.gender).filter((value, index, self) => {
     return self.indexOf(value) === index;
   }).length > 1) {
-    return res.status(400).json({message: "Two names are of opposite gender"});
+    // return res.status(400).json({message: "Two names are of opposite gender"});
   }
 
   const votedForName = votedNames.filter((name) => name.id === vote.voteFor)[0];
