@@ -1,8 +1,8 @@
 import { names } from '@prisma/client';
 import { prisma } from './prisma';
 
-const FIST_MALE_id = 100;
-const LAST_MALE_ID = 199;
+const FIST_MALE_id = 501;
+const LAST_MALE_ID = 1000;
 
 export const getRandomNames = async () => {
   const maleOrFemale = Math.floor(Math.random() * 2) == 0? 'male': 'female';

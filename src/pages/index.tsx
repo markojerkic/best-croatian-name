@@ -2,8 +2,9 @@ import NameSelection from '@/types/name-selection';
 import { names_gender } from '@prisma/client';
 import axios from 'axios';
 import type { NextPage } from 'next';
-import { Dispatch, SetStateAction, useState } from 'react';
 import Image from 'next/image';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { getRandomNames } from '../backend/names-functions';
 
 const NameChoice: React.FC<{name: string, loading: boolean, gender: names_gender, click: () => void}> = 
   ({name, gender, loading, click}) => {
@@ -54,8 +55,7 @@ const Home: NextPage<{nameSelection: NameSelection}> = ({nameSelection}) => {
 
 export const getServerSideProps = async () => {
   
-  const nameSelection = await axios.get<NameSelection>('http://localhost:3000/api/random-names')
-    .then(response => response.data);
+  const nameSelection = await getRandomNames();
 
   return {
     props: {

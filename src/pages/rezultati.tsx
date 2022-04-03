@@ -1,7 +1,7 @@
 import { names } from '@prisma/client';
-import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
 import { useState } from 'react';
+import { getSortedNames } from '../backend/names-functions';
 
 const NamesPanel: React.FC<{gender: 'male' | 'female', names: names[]}> = ({gender, names}) => {
   const [filteredNames, setFilteredNames] = useState<names[]>(names);
@@ -47,11 +47,13 @@ const ResultsPage: NextPage<{maleNames: names[], femaleNames: names[]}> = ({male
 
 export const getStaticProps: GetStaticProps = async () => {
 
-  const names = await axios.get<{maleNames: names[], femaleNames: names[]}>
-    ('http://localhost:3000/api/sorted-names').then((res) => res.data);
+  const [maleNames, femaleNames] = await Promise.all([
+    getSortedNames('male'),
+    getSortedNames('female')
+  ]);
 
   const REVALIDATE = 60 * 5;
-  return {props: names, revalidate: REVALIDATE}
+  return {props: {maleNames, femaleNames}, revalidate: REVALIDATE}
 }
 
 export default ResultsPage;
