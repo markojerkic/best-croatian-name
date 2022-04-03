@@ -2,18 +2,26 @@ import { names } from '@prisma/client';
 import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
 
-const NameResult: React.FC<{name: names}> = ({name}) => {
-  return (
-    <div className="flex justify-between"><span className="capitalize">{name.name}</span><span>{name.rating}</span></div>
-  );
-}
-
 const NamesPanel: React.FC<{gender: 'male' | 'female', names: names[]}> = ({gender, names}) => {
   return (
-    <div className="w-96 mx-auto my-4">
-      <p>{gender === 'male'? 'Muška': 'Ženska'} imena</p>
-      <hr />
-      {names.map((name) => (<NameResult key={name.id} name={name}></NameResult>))}
+    <div className="w-96 mx-auto my-4 space-y-4">
+      <p className="font-bold text-xl text-center">{gender === 'male'? 'Muška': 'Ženska'} imena</p>
+      <table className="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Ime</th>
+            <th>Ocjena</th>
+          </tr>
+        </thead>
+        <tbody>
+        {names.map((name, index) => (<tr key={name.id}>
+          <td>{index+1}</td>
+          <td>{name.name}</td>
+          <td>{name.rating}</td>
+        </tr>))}
+        </tbody>
+      </table>
     </div>
   )
 }
