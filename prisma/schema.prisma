@@ -12,7 +12,7 @@ model names {
   id     Int          @id @default(autoincrement())
   name   String       @db.VarChar(255)
   gender names_gender
-  rating Float?       @default(0) @db.Float
+  rating Float        @default(0) @db.Float
 
   @@unique([name, gender], map: "name")
 }
