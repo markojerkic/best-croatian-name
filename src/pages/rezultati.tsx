@@ -1,11 +1,21 @@
 import { names } from '@prisma/client';
 import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
+import { useState } from 'react';
 
 const NamesPanel: React.FC<{gender: 'male' | 'female', names: names[]}> = ({gender, names}) => {
+  const [filteredNames, setFilteredNames] = useState<names[]>(names);
+
+  const filterNames = (value: string) => {
+    setFilteredNames(names.filter((name) => name.name.toLowerCase().includes(value.toLowerCase())));
+  }
+
   return (
     <div className="w-96 mx-auto my-4 space-y-4">
       <p className="font-bold text-xl text-center">{gender === 'male'? 'Muška': 'Ženska'} imena</p>
+      <input type="text" placeholder="Pretraga imena" 
+        className="input input-bordered w-full"
+        onChange={(event) => filterNames(event.target.value)}></input>
       <table className="table table-zebra w-full">
         <thead>
           <tr>
@@ -15,7 +25,7 @@ const NamesPanel: React.FC<{gender: 'male' | 'female', names: names[]}> = ({gend
           </tr>
         </thead>
         <tbody>
-        {names.map((name, index) => (<tr key={name.id}>
+        {filteredNames.map((name, index) => (<tr key={name.id}>
           <td>{index+1}</td>
           <td>{name.name}</td>
           <td>{name.rating}</td>
