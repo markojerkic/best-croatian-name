@@ -1,4 +1,4 @@
-import file from "./formated_names-2000.json";
+import file from "./example-fill.json";
 import {prisma} from "../src/backend/prisma";
 import { names_gender } from "@prisma/client";
 
