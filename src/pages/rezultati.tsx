@@ -1,6 +1,6 @@
 import { names } from '@prisma/client';
 import { GetStaticProps, NextPage } from "next";
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { getSortedNames } from '../backend/names-functions';
 
 const NamesPanel: React.FC<{gender: 'male' | 'female', names: names[]}> = ({gender, names}) => {
@@ -36,11 +36,33 @@ const NamesPanel: React.FC<{gender: 'male' | 'female', names: names[]}> = ({gend
   )
 }
 
-const ResultsPage: NextPage<{maleNames: names[], femaleNames: names[]}> = ({maleNames, femaleNames}) => {
+const GenderSelector: React.FC<{isMaleSelected: boolean, setIsMaleSelected: Dispatch<SetStateAction<boolean>>}> = 
+({isMaleSelected, setIsMaleSelected}) => {
   return (
-    <div className="flex justify-around">
-      <NamesPanel gender="male" names={maleNames} />
-      <NamesPanel gender="female" names={femaleNames} />
+    <div className="tabs">
+      <a className={"tab tab-lg tab-lifted" + (isMaleSelected && ' tab-active')} 
+        onClick={() => setIsMaleSelected(true)} >Muška imena</a> 
+      <a className={"tab tab-lg tab-lifted" + (!isMaleSelected && ' tab-active')}
+        onClick={() => setIsMaleSelected(false)} >Ženska imena</a>
+    </div>
+  );
+}
+
+const ResultsPage: NextPage<{maleNames: names[], femaleNames: names[]}> = ({maleNames, femaleNames}) => {
+  const [isMaleSelected, setIsMaleSelected] = useState<boolean>(true);
+  return (
+    <div className="flex flex-col justify-center space-y-4">
+      <div className="lg:hidden mx-auto">
+        <GenderSelector isMaleSelected={isMaleSelected} setIsMaleSelected={setIsMaleSelected} />
+      </div>
+      <div className="flex flex-col lg:flex-row justify-around">
+        <div className={isMaleSelected? '': 'hidden lg:block'}>
+          <NamesPanel gender="male" names={maleNames} />
+        </div>
+        <div className={!isMaleSelected? '': 'hidden lg:block'}>
+          <NamesPanel gender="female" names={femaleNames} />
+        </div>
+      </div>
     </div>
   )
 }
