@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <div>
       <Head>
         <title>Odabir najljepših hrvatskih imena</title>
-        <meta property="og:title" content="Odabir najljepših hrvatskih imena<" key="title" />
+        <meta property="og:title" content="Odabir najljepših hrvatskih imena" key="title" />
         <link rel="shortcut icon" href="/favicon_kockice.ico" />
       </Head>
       <Navbar />
