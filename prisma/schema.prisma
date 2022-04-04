@@ -1,11 +1,12 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+  previewFeatures = ["referentialIntegrity", "extendedIndexes"]
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")  
+  referentialIntegrity = "prisma"
 }
 
 model names {
@@ -14,7 +15,7 @@ model names {
   gender names_gender
   rating Float        @default(100) @db.Float
 
-  @@unique([name, gender], map: "name")
+  @@index([rating(sort: Desc)])
 }
 
 enum names_gender {

@@ -1,4 +1,4 @@
-import file from "./formated_names-1000.json";
+import file from "./formated_names-2000.json";
 import {prisma} from "../src/backend/prisma";
 import { names_gender } from "@prisma/client";
 
@@ -14,7 +14,7 @@ const fillFirst200 = async () => {
     }
     namesExists.push({name: name.name, gender: name.gender});
     return true;
-  }).map((name) => ({...name, id: id++}));
+  });
 
   const creation = await prisma.names.createMany({data: filtered});
   console.log(creation);
