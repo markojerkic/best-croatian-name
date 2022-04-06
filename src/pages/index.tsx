@@ -3,18 +3,20 @@ import {names_gender} from '@prisma/client';
 import axios from 'axios';
 import type {NextPage} from 'next';
 import Image from 'next/image';
-import React, {Dispatch, SetStateAction, useState} from 'react';
-import {getRandomNames} from '../backend/names-functions';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-const NameChoice: React.FC<{name: string, loading: boolean,
-  gender: names_gender, click: () => void}> =
-  ({name, gender, loading, click}) => {
-    const maleOfFemale = gender === 'male'? 'hover:bg-blue-600 bg-blue-400':
+const NameChoice: React.FC<{name: string | undefined,
+  defaultGender: 'male' | 'female',
+  gender: names_gender | undefined,
+  click: () => void}> =
+  ({name, gender, defaultGender, click}) => {
+    const maleOfFemale = gender === 'male' ||
+    (!gender && defaultGender === 'male')? 'hover:bg-blue-600 bg-blue-400':
       'hover:bg-red-700 bg-red-500';
     const className = `w-64 h-64 flex justify-center items-center 
     hover:cursor-pointer rounded-lg text-white
     font-bold ${maleOfFemale}`;
-    if (loading) {
+    if (!name) {
       return <Image className={maleOfFemale} src="/loading-rings.svg"
         width={256} height={256} alt="Učitavanje..." />;
     }
@@ -24,54 +26,58 @@ const NameChoice: React.FC<{name: string, loading: boolean,
     );
   };
 
-const castVote = async (voteFor: number, voteAgainst: number,
-    setNames: Dispatch<SetStateAction<NameSelection>>,
-    setLoading: Dispatch<SetStateAction<boolean>>) => {
-  setLoading(true);
+const castVote = async (voteFor: number | undefined,
+    voteAgainst: number | undefined,
+    setNames: Dispatch<SetStateAction<NameSelection | undefined>>) => {
+  setNames(undefined);
+  if (!voteFor || !voteAgainst) {
+    return;
+  }
   setNames(await axios.post<NameSelection>('/api/vote-names',
-      {voteFor, voteAgainst}).then((res) => {
-    setLoading(false);
-    return res.data;
-  }));
+      {voteFor, voteAgainst}).then((res) => res.data));
 };
 
-const Home: NextPage<{nameSelection: NameSelection}> =
-  ({nameSelection}) => {
-    const [{firstName, secondName}, setNames] =
-      useState<NameSelection>(nameSelection);
-    const [loading, setLoading] = useState<boolean>(false);
+const getFirstRandomNames = async (setNames:
+  Dispatch<SetStateAction<NameSelection | undefined>>) => {
+  setNames(await axios.get<NameSelection>('/api/random-names')
+      .then((res) => res.data));
+};
 
-    return (
-      <div className="w-full h-screen flex flex-col justify-center space-y-6">
-        <h2 className="text-center text-3xl font-bold italic">
+const Home: NextPage = () => {
+  const [names, setNames] =
+      useState<NameSelection | undefined>();
+
+  useEffect(() => {
+    getFirstRandomNames(setNames);
+  }, []);
+
+  return (
+    <div className="w-full h-screen flex flex-col justify-center space-y-6">
+      <h2 className="text-center text-3xl font-bold italic">
           Koje ime vam je ljepše?
-        </h2>
-        <div className="md:space-x-4 flex flex-col lg:flex-row
+      </h2>
+      <div className="space-x-4 flex flex-col lg:flex-row
           justify-center items-center">
-          <NameChoice name={firstName.name} gender={firstName.gender}
-            loading={loading}
-            click={() => castVote(firstName.id,
-                secondName.id, setNames, setLoading)}
+        <div>
+          <NameChoice name={names?.firstName.name}
+            gender={names?.firstName.gender}
+            defaultGender="male"
+            click={() => castVote(names?.firstName.id,
+                names?.secondName.id, setNames)}
           />
-          <div className="my-4">ili</div>
-          <NameChoice name={secondName.name} gender={secondName.gender}
-            loading={loading}
-            click={() => castVote(secondName.id,
-                firstName.id, setNames, setLoading)}
+        </div>
+        <div className="my-4">ili</div>
+        <div>
+          <NameChoice name={names?.secondName.name}
+            gender={names?.secondName.gender}
+            defaultGender="female"
+            click={() => castVote(names?.secondName.id,
+                names?.firstName.id, setNames)}
           />
         </div>
       </div>
-    );
-  };
-
-export const getServerSideProps = async () => {
-  const nameSelection = await getRandomNames();
-
-  return {
-    props: {
-      nameSelection,
-    },
-  };
+    </div>
+  );
 };
 
 export default Home;
