@@ -12,8 +12,14 @@ export const getRandomNames = async () => {
   console.log(minMax);
   const generate = () => Math.floor(Math.random() *
     (minMax.max-minMax.min)) + minMax.min-1;
-  const ids = [generate(), generate(), generate()];
-  const names = await getNamesFromIds(ids);
+  const names = [];
+  while (names.length < 2) {
+    const ids = [];
+    for (let i = 0; i < 2-names.length; i++) {
+      ids.push(generate());
+    }
+    names.push(...await getNamesFromIds(ids));
+  }
   return {
     firstName: names[0],
     secondName: names[1],
