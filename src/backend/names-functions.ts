@@ -38,8 +38,12 @@ export const updateRating = async (name: names) => {
 };
 
 export const getSortedNames = async (gender: 'male' | 'female') => {
-  return await prisma.names.findMany({
+  let order = 0;
+  return (await prisma.names.findMany({
     where: {gender: gender},
     orderBy: {rating: 'desc'},
-  });
+  })).map((foundName) => mapNames(foundName, ++order));
 };
+
+export const mapNames = (name: names, order: number) =>
+  ({...name, order});

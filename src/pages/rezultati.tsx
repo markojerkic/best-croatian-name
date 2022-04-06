@@ -1,12 +1,12 @@
-import {names} from '@prisma/client';
 import {GetStaticProps, NextPage} from 'next';
-import {Dispatch, SetStateAction, useState} from 'react';
-import {getSortedNames} from '../backend/names-functions';
-import React from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
+import {getSortedNames, mapNames} from '../backend/names-functions';
 
-const NamesPanel: React.FC<{gender: 'male' | 'female', names: names[]}> =
+type OrderedName = ReturnType<typeof mapNames>;
+
+const NamesPanel: React.FC<{gender: 'male' | 'female', names: OrderedName[]}> =
   ({gender, names}) => {
-    const [filteredNames, setFilteredNames] = useState<names[]>(names);
+    const [filteredNames, setFilteredNames] = useState<OrderedName[]>(names);
 
     const filterNames = (value: string) => {
       setFilteredNames(names.filter((name) => name.name.toLowerCase()
@@ -23,14 +23,14 @@ const NamesPanel: React.FC<{gender: 'male' | 'female', names: names[]}> =
         <table className="table table-zebra w-full">
           <thead>
             <tr>
-              <th></th>
+              <th>Poredak</th>
               <th>Ime</th>
               <th>Ocjena</th>
             </tr>
           </thead>
           <tbody>
             {filteredNames.map((name, index) => (<tr key={name.id}>
-              <td>{index+1}</td>
+              <td>{name.order}</td>
               <td>{name.name}</td>
               <td>{name.rating}</td>
             </tr>))}
@@ -54,7 +54,8 @@ const GenderSelector: React.FC<{isMaleSelected: boolean,
   );
 };
 
-const ResultsPage: NextPage<{maleNames: names[], femaleNames: names[]}> =
+const ResultsPage: NextPage<{maleNames: OrderedName[],
+  femaleNames: OrderedName[]}> =
   ({maleNames, femaleNames}) => {
     const [isMaleSelected, setIsMaleSelected] = useState<boolean>(true);
     return (
@@ -81,7 +82,8 @@ export const getStaticProps: GetStaticProps = async () => {
     getSortedNames('female'),
   ]);
 
-  const REVALIDATE = 60 * 5;
+  console.log(maleNames);
+  const REVALIDATE = 60 * 60 * 24;
   return {props: {maleNames, femaleNames}, revalidate: REVALIDATE};
 };
 
