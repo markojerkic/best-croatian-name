@@ -13,6 +13,9 @@ const MyApp = ({Component, pageProps}: AppProps) => {
         <meta property="og:title"
           content="Odabir najljepših hrvatskih imena" key="title" />
         <link rel="shortcut icon" href="/favicon_kockice.ico" />
+        <meta name="description"
+          content="Stranica preko koje možete glasati koje vam je najljepše
+          hrvatsko ime. 1000 najpopularnijih i najljepših imena u Hrvatskoj"/>
       </Head>
       <main>
         <Navbar />
