@@ -1,3 +1,11 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:react/recommended", "google"],
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "react/prop-types": 0,
+    "linebreak-style": 0,
+    "camelcase": 0
+  }
 }

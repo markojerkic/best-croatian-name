@@ -1,4 +1,4 @@
-import { names } from "@prisma/client";
+import {names} from '@prisma/client';
 
 type NameSelection = {
   firstName: names;
