@@ -1,19 +1,18 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity", "extendedIndexes"]
+  previewFeatures = ["extendedIndexes"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")  
-  referentialIntegrity = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model names {
   id     Int          @id @default(autoincrement())
   name   String       @db.VarChar(255)
   gender names_gender
-  rating Float        @default(100) @db.Float
+  rating Float        @default(100)
 
   @@index([rating(sort: Desc)])
 }
