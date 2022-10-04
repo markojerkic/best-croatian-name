@@ -51,7 +51,8 @@ const InfoPage: NextPage = () => {
               target="_blank" rel="noreferrer">TailwindCss</a><br />
             <a className="link" href="https://github.com/axios/axios"
               target="_blank" rel="noreferrer">Axios</a><br />
-            <p>MySql</p>
+            <a className="link" href="https://supabase.com/"
+              target="_blank" rel="noreferrer">supabase</a><br />
           </div>
           <p>Inspiracija: <a className="link" href="https://github.com/TheoBr/roundest-mon" target="_blank" rel="noreferrer">
             TheoBr
